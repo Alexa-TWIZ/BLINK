@@ -42,8 +42,8 @@ def _annotate(annotator, sentence):
     samples = []
     for mention in mentions:
         record = {}
-        #record["label"] = "unknown"
-        #record["label_id"] = -1
+        record["label"] = "unknown"
+        record["label_id"] = -1
         # LOWERCASE EVERYTHING !
         record["context_left"] = sentence[:mention["start_pos"]].lower()
         record["context_right"] = sentence[mention["end_pos"]:].lower()
