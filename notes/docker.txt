@@ -1,0 +1,19 @@
+aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/j2b1t4w4
+docker build -t blink .
+docker tag blink:latest public.ecr.aws/j2b1t4w4/blink:latest
+docker push public.ecr.aws/j2b1t4w4/blink:latest
+
+docker build -t blink_api .
+docker tag blink_api:latest public.ecr.aws/j2b1t4w4/blink_api:latest
+docker push public.ecr.aws/j2b1t4w4/blink_api:latest
+
+docker build -t blink_api .
+docker tag blink_api:latest heldertechnip/blink:latest
+docker push heldertechnip/blink:latest
+
+docker run -p 8000:8000 --mount type=bind,source=/tmp,target=/app/models heldertechnip/blink:latest
+
+mkdir ~/efs-mount-point
+sudo mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-40e9aff4.efs.us-east-1.amazonaws.com:/ ~/efs-mount-point
+docker run -p 8000:8000 --mount type=bind,source=/home/ec2-user/efs-mount-point,target=/app/models heldertechnip/blink:latest
+
